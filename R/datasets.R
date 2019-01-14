@@ -26,7 +26,7 @@ qa_dataset <- function(name, refresh_cache = FALSE, verbose = FALSE) {
                      id = paste0("Quantarctica: ", lx$layername[idx]),
                      description = "Quantarctica data",
                      doc_url = "http://quantarctica.npolar.no/",
-                     citation = paste0("Matsuoka, K., Skoglund, A., & Roth, G. (2018). Quantarctica ", lx$layername[idx], ". Norwegian Polar Institute. https://doi.org/10.21334/npolar.2018.8516e961"),
+                     citation = paste0("Matsuoka K, Skoglund A, Roth G (2018) Quantarctica ", lx$layername[idx], ". Norwegian Polar Institute. https://doi.org/10.21334/npolar.2018.8516e961"),
                      source_url = sub("[/\\]+$", "/", paste0(qa_mirror(), path, "/")), ## ensure trailing sep
                      license = "CC-BY 4.0 International",
                      method = list("bb_handler_rget", level = 2, no_host = TRUE, cut_dirs = 1, accept_download_extra = "(cpg|dbf|prj|qix|shp|shx)$"),
@@ -37,9 +37,27 @@ qa_dataset <- function(name, refresh_cache = FALSE, verbose = FALSE) {
                      )
     ## add the path to the main file of this data set
     out$main_file <- lx$datasource[idx] ## relative to cache dir root
+    ## add custom class to the returned object
+    class(out) <- c("qa_dataset", class(out))
     out
 }
 
+
+#' @method print qa_dataset
+#' @export
+"print.qa_dataset" <- function(x, ...) {
+    cat(paste0("Quantarctica is made available under a ", x$license, " license. If you use the '", x$name, "' data set, please cite it:\n\n"))
+    ## print citation
+    cat(x$citation, "\n\n")
+    ## Placeholder to add cached indicator, ( to be added to qa_get first?)
+    ## Placeholder to add download date/time , ( to be added to qa_get first?)
+    ## Placeholder for out
+
+    ## as a temporary measure, just print the remainder of the data.frame object
+    othercols <- setdiff(names(x), c("name", "citation"))
+    print(format.data.frame(x[, othercols], na.encode=FALSE))
+    invisible(x)
+}
 
 #' Available Quantarctica data sets
 #'
