@@ -24,7 +24,7 @@ qa_dataset <- function(name, refresh_cache = FALSE, verbose = FALSE) {
     }
     out <- bb_source(name = lx$layername[idx],
                      id = paste0("Quantarctica: ", lx$layername[idx]),
-                     description = "Quantarctica data",
+                     description = if (!is.na(lx$abstract[idx])) lx$abstract[idx] else "Quantarctica data",
                      doc_url = "http://quantarctica.npolar.no/",
                      citation = paste0("Matsuoka K, Skoglund A, Roth G (2018) Quantarctica ", lx$layername[idx], ". Norwegian Polar Institute. https://doi.org/10.21334/npolar.2018.8516e961"),
                      source_url = sub("[/\\]+$", "/", paste0(qa_mirror(), path, "/")), ## ensure trailing sep
@@ -49,6 +49,8 @@ qa_dataset <- function(name, refresh_cache = FALSE, verbose = FALSE) {
     cat(paste0("Quantarctica is made available under a ", x$license, " license. If you use the '", x$name, "' data set, please cite it:\n\n"))
     ## print citation
     cat(x$citation, "\n\n")
+    ## print other parts of the data definition that users might want to see
+    cat("Data description:\n", x$description, "\n\n")
     ## Placeholder to add cached indicator, ( to be added to qa_get first?)
     ## Placeholder to add download date/time , ( to be added to qa_get first?)
     ## Placeholder for out
